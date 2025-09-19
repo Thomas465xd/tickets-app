@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations: 
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"                # Name of the Ingress resource
+spec:
+  ingressClassName: nginx            # Specifies the Ingress controller to use (nginx in this case)
+  tls:
+    - hosts:
+        - tickets.dev
+      secretName: tickets-dev-tls
+  rules:                             # List of routing rules
+    - host: tickets.dev                # Domain name that this rule applies to
+      http:                          # HTTP routing configuration
+        paths:                       # List of paths under the given host
+          - path: /api/auth/?(.*)             # URL path to match
+            pathType: ImplementationSpecific        # Match all paths that start with "/posts"
+            backend:                 # Defines where traffic should be sent
+              service:               # Backend is a Kubernetes Service
+                name: auth-srv  # Name of the Service to route traffic to
+                port:
+                  number: 4000       # Port on the Service to forward requests

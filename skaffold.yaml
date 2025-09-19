@@ -1,0 +1,20 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+build: 
+  artifacts:
+    - image: thomastheprogrammer/auth-service
+      context: auth
+      sync:
+        manual:
+          - dest: .
+            src: src/**/*.ts
+      docker:
+        dockerfile: Dockerfile
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - infra/k8s/*
+deploy:
+  kubectl:
+    {}

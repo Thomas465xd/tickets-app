@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth  # Asign a label (equal to the one in matchLabels) to the pod
+    spec:
+      containers:
+        - name: auth
+          image: "thomastheprogrammer/auth-service:dev"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-srv
+spec:
+  selector:
+    app: auth  # Asign a label (equal to the one in matchLabels of the auth deployment) to the pod
+  ports:
+  - name: auth 
+    protocol: TCP
+    port: 4000
+    targetPort: 4000

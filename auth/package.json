@@ -1,0 +1,27 @@
+{
+	"name": "auth",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "nodemon --exec ts-node src/index.ts",
+        "build": "tsc -b"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@types/cors": "^2.8.19",
+		"@types/express": "^5.0.3",
+		"@types/morgan": "^1.9.10",
+		"colors": "^1.4.0",
+		"cors": "^2.8.5",
+		"express": "^5.1.0",
+		"morgan": "^1.10.1"
+	},
+	"devDependencies": {
+		"nodemon": "^3.1.10",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.9.2"
+	}
+}
