@@ -5,8 +5,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRouter from "./routes";
 import { errorHandler } from "./middleware/error";
+import { NotFoundError } from "./errors/not-found";
+import { connectDB } from "./config/db";
 
 dotenv.config();
+
+connectDB();
 
 const app = express(); 
 
@@ -21,6 +25,11 @@ app.use(cors());
 
 //? Routes
 app.use("/api/auth", authRouter)
+
+//? Trigger not-found error | before Error Handler & after router declarations
+app.all("/{*splat}/" , async (req, res, next) => {
+    throw new NotFoundError()
+});
 
 //? Error Handler | has to be after all the route handlers
 app.use(errorHandler);
