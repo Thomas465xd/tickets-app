@@ -1,8 +1,8 @@
 import { CustomError } from "./custom-error";
 
 // Custom error class for handling validation errors in requests
-export class NotFoundError extends CustomError {
-    statusCode = 404;
+export class NotAuthorizedError extends CustomError {
+    statusCode = 401;
 
     // The constructor runs every time we create a new NotFoundError.
     // It accepts an array of ValidationError objects from express-validator.
@@ -13,12 +13,12 @@ export class NotFoundError extends CustomError {
         // Call the parent (Error) constructor. (Like a chain effect)
         // This sets up the built-in Error features (stack trace, message, etc.).
         // You could pass a message here like: super("Invalid request parameters");
-        super("Route not Found");
+        super("Not Authorized to access resource");
 
         // Fix the prototype chain because we're extending a built-in class (Error).
         // Without this, "instanceof NotFoundError" might not work correctly,
         // since JavaScript has quirks when subclassing built-ins.
-        Object.setPrototypeOf(this, NotFoundError.prototype);
+        Object.setPrototypeOf(this, NotAuthorizedError.prototype);
     }
 
     serializeErrors() {
