@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { Request, Response } from "express";
-import { currentUser, requireAuth } from "../middleware/auth";
+import { currentUser } from "../middleware/auth";
 
 const router = Router();
 
-router.get("/user", currentUser, requireAuth, (req: Request, res: Response) => {
+router.get("/user", currentUser, (req: Request, res: Response) => {
     return res.status(200).json({ currentUser: req.user || null });
 });
 

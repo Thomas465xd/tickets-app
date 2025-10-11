@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 //? Cookies config middleware
 app.use(cookieSession({
     signed: false, 
-    secure: true, 
+    secure: process.env.NODE_ENV !== "test",
     httpOnly: true
 }))
 
