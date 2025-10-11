@@ -1,3 +1,4 @@
+import toJSON from "../utils/json";
 import { Password } from "../utils/password"
 import mongoose, { Schema, Document, Model } from "mongoose";
 
@@ -27,23 +28,39 @@ export interface UserModel extends Model<UserInterface> {
 }
 
 // Define the User document Schema
-const userSchema : Schema = new Schema({
-    name: {
-        type: String, 
-        required: true, 
-        trim: true, 
+const userSchema : Schema = new Schema(
+    {
+        name: {
+            type: String, 
+            required: true, 
+            trim: true, 
+        }, 
+        email: {
+            type: String, 
+            required: true, 
+            trim: true
+        }, 
+        password: {
+            type: String, 
+            required: true, 
+            trim: true
+        }, 
     }, 
-    email: {
-        type: String, 
-        required: true, 
-        trim: true
-    }, 
-    password: {
-        type: String, 
-        required: true, 
-        trim: true
+    {
+        timestamps: true,
+        // toJSON: {
+        //     transform(doc, ret) {
+        //         (ret as any).id = ret._id;
+        //         delete ret._id;
+        //         delete ret.password;
+        //         delete ret.__v;
+        //     },
+        // },
     }
-}, {timestamps: true})
+);
+
+// Use the toJSON function from json.ts file
+toJSON(userSchema, "password");
 
 // Hashing Passwords by using the .pre middleware function implemented in mongoose
 // Any time an attempt to save a document to the db is made, the following code will execute

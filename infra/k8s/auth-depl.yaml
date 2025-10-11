@@ -15,6 +15,12 @@ spec:
       containers:
         - name: auth
           image: "thomastheprogrammer/auth-service:dev"
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_SECRET
           resources:
             requests:
               memory: "256Mi"

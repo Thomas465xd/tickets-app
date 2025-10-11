@@ -4,6 +4,8 @@ import { handleInputErrors } from "../middleware/validation";
 import { body } from "express-validator";
 import User from "../models/User";
 import { RequestConflictError } from "../errors/conflict-error";
+import jwt from "jsonwebtoken";
+import { InternalServerError } from "../errors/server-error";
 
 const router = Router();
 
@@ -36,12 +38,22 @@ router.post("/register", [
         throw new RequestConflictError("Email already in use")
     }
 
-    // Create the user & save it to the db
+    //? Create the user & save it to the db
     const user = User.build({ name, email, password})
     await user.save()
 
-    res.status(200).json({ message: "User Created", user })
-    return
+    //~ Generate JWT
+    const userJwt = jwt.sign({
+        id: user.id, 
+        email: user.email
+    }, process.env.JWT_SECRET)
+
+    //~ Store it on session object
+    req.session = {
+        jwt: userJwt
+    }
+
+    return res.status(201).json({ message: "User Created", user });
 })
 
 export default router

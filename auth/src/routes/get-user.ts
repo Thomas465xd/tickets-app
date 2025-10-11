@@ -1,13 +1,11 @@
 import { Router } from "express";
 import { Request, Response } from "express";
-import { body } from "express-validator";
-import { handleInputErrors } from "../middleware/validation";
+import { currentUser, requireAuth } from "../middleware/auth";
 
 const router = Router();
 
-router.get("/user", (req: Request, res: Response) => {
-    // Clear session, token, or whatever logout means in your app
-    res.status(200).send({ message: "Logged out successfully" });
+router.get("/user", currentUser, requireAuth, (req: Request, res: Response) => {
+    return res.status(200).json({ currentUser: req.user || null });
 });
 
 export default router
