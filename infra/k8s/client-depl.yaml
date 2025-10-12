@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: client
+          image: "thomastheprogrammer/client-service:dev"
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 30      # Increased
+            periodSeconds: 10             # Increased
+            timeoutSeconds: 5
+            failureThreshold: 6           # Increased
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 60       # Increased
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "1Gi"               # Increased from 256Mi
+              cpu: "1000m"                # Increased from 250m
+            limits:
+              memory: "2Gi"               # Increased from 512Mi
+              cpu: "2000m"                # Increased from 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-srv
+spec:
+  selector:
+    app: client  # Asign a label (equal to the one in matchLabels of the client deployment) to the pod
+  ports:
+  - name: client 
+    protocol: TCP
+    port: 3000
+    targetPort: 3000
