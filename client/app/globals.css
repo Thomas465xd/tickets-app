@@ -1,26 +1,97 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@utility flex-center {
+    @apply flex justify-center items-center
+}
+
+@utility flex-between {
+    @apply flex justify-between items-center
+}
+
+@utility flex-align {
+    @apply flex gap-2 items-center
+}
+
+@utility title {
+    @apply font-extrabold uppercase text-3xl mb-4 
+}
+
+@utility button-zinc-gradient {
+    @apply bg-gradient-to-r from-zinc-700 via-zinc-600 to-zinc-800 bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%] transition-all duration-500 px-8 py-2 rounded-md flex items-center gap-2 text-white
+}
+
+@utility button-blue-gradient {
+    @apply bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%] transition-all duration-500 px-8 py-2 rounded-md flex items-center gap-2 text-white
+}
+
+@utility button-green-gradient {
+    @apply bg-gradient-to-r from-green-700 via-green-600 to-green-800 bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%] transition-all duration-500 px-8 py-2 rounded-md flex items-center gap-2 text-white
+}
+
+@utility input {
+    @apply w-full p-3 rounded-lg border border-gray-300 dark:border-stone-600 
+    bg-white dark:bg-stone-800 
+    text-gray-900 dark:text-stone-100 
+    placeholder-gray-500 dark:placeholder-stone-400
+    focus:ring-2 focus:ring-amber-500 dark:focus:ring-amber-400 
+    focus:border-transparent
+    shadow-sm dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]
+    transition-all duration-200;
+}
+
+@utility card {
+    @apply relative rounded-2xl p-8 border h-full 
+    bg-white dark:bg-stone-900/90 
+    border-zinc-200 dark:border-stone-800 
+    shadow-sm dark:shadow-[0_4px_15px_rgba(0,0,0,0.4)]
+    hover:shadow-lg dark:hover:shadow-[0_8px_25px_rgba(0,0,0,0.6)]
+    hover:border-zinc-300 dark:hover:border-stone-700
+    backdrop-blur-sm dark:backdrop-blur-md
+    transition-all duration-300;
+}
+
+@utility paragraph {
+    @apply mt-2 text-sm 
+    text-stone-700 dark:text-stone-200 
+    leading-relaxed dark:leading-relaxed;
+}
+
+@utility highlight {
+    @apply font-semibold text-amber-500 dark:text-amber-400 drop-shadow-sm;
+}
+
+@utility link {
+    @apply text-amber-600 dark:text-amber-400 
+    hover:text-amber-700 dark:hover:text-amber-300
+    underline-offset-2 hover:underline
+    transition-colors duration-200 text-sm;
+}
+
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    /* 👇 optional fallback */
+    --font-sans: 'Poppins', sans-serif;
+    --font-mono: var(--font-geist-mono);
+}
+.dark {
+	--background: #1d1d1d;
+	--foreground: #ededed;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.light {
+    --background: #ffffff;
+    --foreground: #000000;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+	background: var(--background);
+	color: var(--foreground);
+
+    /* 👇 use the custom font var */
+	font-family: var(--font-sans), sans-serif;
 }
