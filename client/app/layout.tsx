@@ -40,7 +40,7 @@ export default function RootLayout({
 		<html lang="en" suppressHydrationWarning>
 			<body
                 suppressHydrationWarning
-				className="font-sans antialiased min-h-screen flex flex-col"
+				className="font-sans antialiased flex min-h-screen flex-col"
 			>
                 <ReactQueryProvider>
                     <Theme>
