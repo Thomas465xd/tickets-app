@@ -1,12 +1,10 @@
 import { Router } from "express";
 import { Request, Response } from "express";
 import { body } from "express-validator";
-import { handleInputErrors } from "../middleware/validation";
 import User from "../models/User";
-import { NotFoundError } from "../errors/not-found";
-import { NotAuthorizedError } from "../errors/not-authorized";
 import { Password } from "../utils/password";
 import jwt from "jsonwebtoken";
+import { handleInputErrors, NotAuthorizedError, NotFoundError } from "@thomas-ticketx/common";
 
 const router = Router();
 

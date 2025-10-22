@@ -4,6 +4,7 @@ import request from "supertest";
 
 // Set environment variables BEFORE importing anything
 process.env.JWT_SECRET = "testsecret";
+process.env.DATABASE_URL = "mongodb://auth-mongo-srv:27017/auth";
 
 import server from "../server";
 

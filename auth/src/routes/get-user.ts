@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Request, Response } from "express";
-import { currentUser } from "../middleware/auth";
+import { currentUser } from "@thomas-ticketx/common";
 
 const router = Router();
 

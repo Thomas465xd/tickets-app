@@ -10,6 +10,14 @@ build:
             src: "src/**/*.ts"
       docker:
         dockerfile: Dockerfile
+    - image: thomastheprogrammer/ticket-service
+      context: tickets
+      sync:
+        manual:
+          - dest: .
+            src: "src/**/*.ts"
+      docker:
+        dockerfile: Dockerfile
     - image: thomastheprogrammer/client-service
       context: client
       sync:

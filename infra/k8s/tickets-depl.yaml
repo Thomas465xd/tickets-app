@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth
+  name: tickets
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: tickets
   template:
     metadata:
       labels:
-        app: auth  # Asign a label (equal to the one in matchLabels) to the pod
+        app: tickets  # Asign a label (equal to the one in matchLabels) to the pod
     spec:
       containers:
-        - name: auth
-          image: "thomastheprogrammer/auth-service:dev"
+        - name: tickets
+          image: "thomastheprogrammer/ticket-service:dev"
           env:
             - name: JWT_SECRET
               valueFrom:
@@ -22,7 +22,7 @@ spec:
                   name: jwt-secret
                   key: JWT_SECRET
             - name: DATABASE_URL
-              value: mongodb://auth-mongo-srv:27017/auth
+              value: mongodb://tickets-mongo-srv:27017/tickets
           resources:
             requests:
               memory: "256Mi"
@@ -34,12 +34,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: tickets-srv
 spec:
   selector:
-    app: auth  # Asign a label (equal to the one in matchLabels of the auth deployment) to the pod
+    app: tickets  # Asign a label (equal to the one in matchLabels of the tickets deployment) to the pod
   ports:
-  - name: auth 
+  - name: tickets 
     protocol: TCP
     port: 4000
     targetPort: 4000

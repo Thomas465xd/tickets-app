@@ -4,16 +4,19 @@ import morgan from "morgan";
 import cors from "cors"; 
 import dotenv from "dotenv";
 import authRouter from "./routes";
-import { errorHandler } from "./middleware/error";
-import { NotFoundError } from "./errors/not-found";
 import { connectDB } from "./config/db";
 import cookieSession from "cookie-session";
+import { errorHandler, NotFoundError } from "@thomas-ticketx/common";
 
 dotenv.config();
 
 //? Check if necessary env variables are present
 if(!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET must be defined")
+}
+
+if(!process.env.DATABASE_URL) {
+    throw new Error("DATABASE_URL must be defined")
 }
 
 connectDB();

@@ -1,11 +1,9 @@
 import { Router } from "express"
 import { Request, Response } from "express";
-import { handleInputErrors } from "../middleware/validation";
 import { body } from "express-validator";
 import User from "../models/User";
-import { RequestConflictError } from "../errors/conflict-error";
 import jwt from "jsonwebtoken";
-import { InternalServerError } from "../errors/server-error";
+import { handleInputErrors, RequestConflictError } from "@thomas-ticketx/common";
 
 const router = Router();
 
@@ -45,7 +43,8 @@ router.post("/register", [
     //~ Generate JWT
     const userJwt = jwt.sign({
         id: user.id, 
-        email: user.email
+        email: user.email,
+        name: user.name
     }, process.env.JWT_SECRET)
 
     //~ Store it on session object

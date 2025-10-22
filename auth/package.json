@@ -5,21 +5,22 @@
 	"main": "index.js",
 	"scripts": {
 		"dev": "nodemon --exec ts-node src/index.ts",
-		"build": "tsc -b", 
-        "test": "jest --watchAll --no-cache", 
-        "test-clear-cache": "jest --watchAll --no-cache --clearCache"
+		"build": "tsc -b",
+		"test": "jest --watchAll --no-cache",
+		"test-clear-cache": "jest --watchAll --no-cache --clearCache"
 	},
-    "jest": {
-        "preset": "ts-jest", 
-        "testEnvironment": "node",
-        "setupFilesAfterEnv": [
-            "./src/tests/setup.ts"
-        ]
-    },
+	"jest": {
+		"preset": "ts-jest",
+		"testEnvironment": "node",
+		"setupFilesAfterEnv": [
+			"./src/tests/setup.ts"
+		]
+	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@thomas-ticketx/common": "^1.0.3",
 		"@types/cookie-session": "^2.0.49",
 		"@types/cors": "^2.8.19",
 		"@types/express": "^5.0.3",
