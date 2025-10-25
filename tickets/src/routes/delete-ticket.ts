@@ -1,10 +1,36 @@
+import { currentUser, handleInputErrors, NotAuthorizedError, NotFoundError, requireAuth } from "@thomas-ticketx/common";
 import { Router } from "express";
 import { Request, Response } from "express";
+import { param } from "express-validator";
+import Ticket from "../models/Ticket";
 
 const router = Router();
 
-router.delete("/", (req: Request, res: Response) => {
-    res.status(200).json({ message: "OK"})
+router.delete("/:id", [
+    param("id")
+        .notEmpty().withMessage("Ticket ID must be present in the URL")
+        .isMongoId().withMessage("Invalid Ticket ID"),
+    handleInputErrors,
+    currentUser,
+    requireAuth,
+], async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    console.log(id)
+
+    const ticket = await Ticket.findById(id)
+    if(!ticket) {
+        throw new NotFoundError("Ticket not Found");
+    }
+
+    // ⚠️ ownership check
+    if (!ticket.userId.equals(req.user.id)) {
+        throw new NotAuthorizedError("You do not own this Ticket");
+    }
+
+    await ticket.deleteOne();
+
+    return res.status(200).json({ message: "Ticket Deleted Successfully"})
 });
 
 export default router

@@ -1,15 +1,17 @@
 import { Router } from "express";
-import loginRouter from "./get-ticket-by-id";
-import registerRouter from "./update-ticket";
-import logoutRouter from "./create-ticket";
-import getUserRouter from "./get-tickets";
+import getTicketRouter from "./get-ticket-by-id";
+import updateTicketRouter from "./update-ticket";
+import createTicketRouter from "./create-ticket";
+import getTicketsRouter from "./get-tickets";
+import deleteTicketRouter from "./delete-ticket";
 
 const ticketsRouter = Router();
 
 // mount without repeating `/api/auth`
-ticketsRouter.use(loginRouter);
-ticketsRouter.use(registerRouter);
-ticketsRouter.use(logoutRouter);
-ticketsRouter.use(getUserRouter);
+ticketsRouter.use(getTicketRouter);
+ticketsRouter.use(updateTicketRouter);
+ticketsRouter.use(createTicketRouter);
+ticketsRouter.use(getTicketsRouter);
+ticketsRouter.use(deleteTicketRouter);
 
 export default ticketsRouter;

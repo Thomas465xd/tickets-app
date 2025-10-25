@@ -27,6 +27,13 @@ spec:
                 name: auth-srv  # Name of the Service to route traffic to
                 port:
                   number: 4000       # Port on the Service to forward requests
+          - path: /api/tickets/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service: 
+                name: tickets-srv
+                port: 
+                  number: 4000
           - path: /?(.*)
             pathType: ImplementationSpecific
             backend:

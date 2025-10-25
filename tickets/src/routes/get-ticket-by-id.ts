@@ -8,8 +8,8 @@ const router = Router();
 
 router.get("/:id", [
     param("id")
-        .notEmpty().withMessage("El ID del Usuario es Obligatorio")
-        .isMongoId().withMessage("El ID del Usuario no es Valido"),
+        .notEmpty().withMessage("Ticket ID must be present in the URL")
+        .isMongoId().withMessage("Invalid Ticket ID"),
     handleInputErrors,
 ], async (req: Request, res: Response) => {
     const { id } = req.params; 
