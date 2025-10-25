@@ -13,6 +13,7 @@ interface ApiErrorResponse {
     error?: string;
 }
 
+//? 🛠️ Register new user account 
 export async function createAccount(formData: RegisterUserForm) {
     try {
         const url = "/api/auth/register";
@@ -55,6 +56,7 @@ export async function createAccount(formData: RegisterUserForm) {
     }
 }
 
+//? 📋 Login user 
 export async function login(formData: LoginUserForm) {
     try {
         const url = "/api/auth/login";
@@ -97,13 +99,13 @@ export async function login(formData: LoginUserForm) {
     }
 }
 
-
+//? ♟️ Get current authenticated user 
 export async function getUser() {
     try {
         const url = "/api/auth/user";
-        console.log(url)
+        //console.log(url)
         const { data } = await api.get(url);
-        console.log(data)
+        //console.log(data)
 
         const response = getUserSchema.safeParse(data);
 
@@ -115,6 +117,50 @@ export async function getUser() {
 
         return response.data.currentUser;
 
+    } catch (error) {
+        console.error("❌ Error en la solicitud:", error);
+
+        if (isAxiosError(error)) {
+            console.error("🔍 Error de Axios detectado:");
+            console.error("➡️ Código de estado:", error.response?.status);
+            console.error("➡️ Respuesta completa:", error.response?.data);
+
+            const responseData: ApiErrorResponse = error.response?.data;
+
+            // If API returns structured validation errors
+            if (responseData?.errors && Array.isArray(responseData.errors)) {
+                // Throw the structured errors so they can be handled in the component
+                throw {
+                    type: 'validation',
+                    errors: responseData.errors,
+                    statusCode: error.response?.status
+                };
+            }
+
+            // Generic error
+            const errorMessage = 
+                responseData?.message || 
+                responseData?.error || 
+                error.message || 
+                "Ocurrió un error en la API";
+
+            console.error("➡️ Mensaje de error:", errorMessage);
+            throw new Error(errorMessage);
+
+        } else {
+            console.error("⚠️ Error desconocido:", error);
+            throw new Error("Error inesperado. Intenta nuevamente. Si el error persiste, contacta al administrador.");
+        }
+    }
+}
+
+//? 📋 Logout user 
+export async function logout() {
+    try {
+        const url = "/api/auth/logout";
+        const response = await api.post(url);
+        console.log(response)
+        return response.data;                   
     } catch (error) {
         console.error("❌ Error en la solicitud:", error);
 
