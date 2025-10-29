@@ -2,6 +2,7 @@ import request from "supertest";
 import server from "../../server";
 import Ticket from "../../models/Ticket";
 import mongoose from "mongoose";
+import { natsWrapper } from "../../config/nats";
 
 //? ✅
 it("Returns a 400 if the user provides an invalid ticket ID", async () => {
@@ -107,4 +108,32 @@ it("Returns a 200 if the ticket is successfully deleted", async () => {
         .get(`/api/tickets/${ticketId}`)
         .send()
         .expect(404)
+});
+
+it("publishes a ticket:deleted Event", async () => {
+    // Save cookie to be reused
+    const cookie = global.setCookie();
+
+    // Expected outcome: 0 entries
+    let tickets = await Ticket.find({});
+    expect(tickets.length).toEqual(0);
+
+    // Call global createTicket function
+    await createTicket(cookie);
+
+    // Expected outcome after ticket creation: 1 entry
+    tickets = await Ticket.find({});
+    expect(tickets.length).toEqual(1);
+
+    // Get the ticket id
+    const ticketId = tickets[0].id
+
+    await request(server)
+        .delete(`/api/tickets/${ticketId}`)
+        .set("Cookie", cookie)
+        .send()
+        .expect(200);
+
+    //console.log(natsWrapper)
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

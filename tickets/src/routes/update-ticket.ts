@@ -3,6 +3,8 @@ import { Router } from "express";
 import { Request, Response } from "express";
 import { body, param } from "express-validator";
 import Ticket from "../models/Ticket";
+import { natsWrapper } from "../config/nats";
+import { TicketUpdatedPublisher } from "../events/publishers/ticket-updated-publisher";
 
 const router = Router();
 
@@ -54,8 +56,17 @@ router.patch("/:id", [
     if (description !== undefined) ticket.description = description;
     if (date !== undefined) ticket.date = date;
 
-
-    await ticket.save();
+    Promise.allSettled([
+        ticket.save(),
+        new TicketUpdatedPublisher(natsWrapper.client).publish({
+            id: ticket.id, 
+            title: ticket.title, 
+            price: ticket.price, 
+            description: ticket.description, 
+            date: ticket.date, 
+            userId: ticket.userId.toHexString() // userId is defined as string in the common module
+        })
+    ])
 
     res.status(200).json({ message: "Ticket updated Successfully", ticket })
 });

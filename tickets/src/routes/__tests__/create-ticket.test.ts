@@ -1,6 +1,7 @@
 import request from "supertest";
 import server from "../../server";
 import Ticket from "../../models/Ticket";
+import { natsWrapper } from "../../config/nats";
 
 //? ✅📋 Input Validation Tests
 it("Has a route handler listening to /api/tickets for POST Requests", async () => {
@@ -125,4 +126,33 @@ it("Creates a ticket with valid inputs", async () => {
     expect(tickets[0].title).toEqual(title)
     expect(tickets[0].description).toEqual(description)
     expect(tickets[0].date).toEqual(date)
+});
+
+it("publishes a ticket:created Event", async () => {
+    // Expected outcome: 0 entries
+    let tickets = await Ticket.find({});
+    expect(tickets.length).toEqual(0);
+
+    const title = "Valid Title"
+    const price = 100
+    const description = "Halloween Event"
+    const date = "Oct 23 6:00 PM"
+
+    await request(server)
+        .post("/api/tickets")
+        .set("Cookie", global.setCookie())
+        .send({
+            title, 
+            price, 
+            description, 
+            date
+        })
+        .expect(201)
+
+    // Expected outcome after ticket creation: 1 entry
+    tickets = await Ticket.find({});
+    expect(tickets.length).toEqual(1);
+
+    //console.log(natsWrapper)
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

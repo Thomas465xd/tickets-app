@@ -1,6 +1,9 @@
 // Set environment variables BEFORE importing anything
 process.env.JWT_SECRET = "testsecret";
 process.env.DATABASE_URL = "mongodb://tickets-mongo-srv:27017/tickets";
+process.env.NATS_URL = "http://nats-srv:4222"
+process.env.NATS_CLUSTER_ID = "ticketing"
+process.env.NATS_CLIENT_ID = "tickets-depl-añslkda-asñdlkj"
 
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
@@ -18,6 +21,18 @@ jest.mock("../config/db", () => ({
 	connectDB: jest.fn(),
 }));
 
+// Own Custom Implementation by Mocking the connectNats function (/src/config/__mocks__/nats.ts)
+jest.mock("../config/nats", () => ({
+	connectNats: jest.fn(),
+	natsWrapper: {
+		client: {
+			publish: jest.fn().mockImplementation((subject: string, data: string, cb: () => void) => {
+				cb();
+			})
+		}
+	}
+}));
+
 let mongo: MongoMemoryServer;
 
 beforeAll(async () => {
@@ -28,6 +43,8 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+    jest.clearAllMocks(); // Resets mock implementations in between tests so that they are not polluted
+
 	if (mongoose.connection.db) {
 		const collections = await mongoose.connection.db.collections();
 

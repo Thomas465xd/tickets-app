@@ -3,6 +3,8 @@ import { Router } from "express";
 import { Request, Response } from "express";
 import { param } from "express-validator";
 import Ticket from "../models/Ticket";
+import { TicketDeletedPublisher } from "../events/publishers/ticket-deleted-publisher";
+import { natsWrapper } from "../config/nats";
 
 const router = Router();
 
@@ -16,8 +18,6 @@ router.delete("/:id", [
 ], async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    console.log(id)
-
     const ticket = await Ticket.findById(id)
     if(!ticket) {
         throw new NotFoundError("Ticket not Found");
@@ -28,7 +28,13 @@ router.delete("/:id", [
         throw new NotAuthorizedError("You do not own this Ticket");
     }
 
-    await ticket.deleteOne();
+    //^ Delete the Ticket & Emit a ticket:deleted event
+    Promise.allSettled([
+        ticket.deleteOne(),
+        new TicketDeletedPublisher(natsWrapper.client).publish({
+            id: ticket.id
+        })
+    ])
 
     return res.status(200).json({ message: "Ticket Deleted Successfully"})
 });

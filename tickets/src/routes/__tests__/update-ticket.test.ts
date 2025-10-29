@@ -2,6 +2,7 @@ import request from "supertest";
 import server from "../../server";
 import Ticket from "../../models/Ticket";
 import mongoose from "mongoose";
+import { natsWrapper } from "../../config/nats";
 
 //? 📋 Input Validation Tests
 
@@ -279,4 +280,42 @@ it("Updates the ticket if provided valid inputs", async () => {
     expect(ticketResponse.body.price).toEqual(1000)
     expect(ticketResponse.body.description).toEqual("Halloween Event Updated")
     expect(ticketResponse.body.date).toEqual("Oct 23 7:00 PM")
+});
+
+it("publishes a ticket:updated Event", async () => {
+    // Save cookie to be reused
+    const cookie = global.setCookie();
+
+    // Expected outcome: 0 entries
+    let tickets = await Ticket.find({});
+    expect(tickets.length).toEqual(0);
+
+    // Call global createTicket function
+    await createTicket(cookie);
+
+    // Expected outcome after ticket creation: 1 entry
+    tickets = await Ticket.find({});
+    expect(tickets.length).toEqual(1);
+
+    // Get the ticket id
+    const ticketId = tickets[0].id
+
+    const title = "Valid New Title"
+    const price = 1000
+    const description = "Halloween Event Updated"
+    const date = "Oct 23 7:00 PM"
+
+    await request(server)
+        .patch(`/api/tickets/${ticketId}`)
+        .set("Cookie", cookie)
+        .send({
+            title, 
+            price, 
+            description, 
+            date
+        })
+        .expect(200);
+
+    //console.log(natsWrapper)
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
 });
