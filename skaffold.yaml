@@ -18,6 +18,12 @@ build:
             src: "src/**/*.ts"
       docker:
         dockerfile: Dockerfile
+    - image: thomastheprogrammer/orders-service
+      context: orders
+      sync: 
+        manual:
+          - dest: .
+            src: "src/**/*.ts"
     - image: thomastheprogrammer/client-service
       context: client
       sync:

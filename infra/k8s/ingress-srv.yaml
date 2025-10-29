@@ -34,6 +34,13 @@ spec:
                 name: tickets-srv
                 port: 
                   number: 4000
+          - path: /api/orders/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: orders-srv
+                port : 
+                  number: 4000
           - path: /?(.*)
             pathType: ImplementationSpecific
             backend:
