@@ -21,6 +21,10 @@ if(!process.env.DATABASE_URL) {
     throw new Error("DATABASE_URL must be defined")
 }
 
+if(!process.env.EXPIRATION_SECONDS) {
+    throw new Error("EXPIRATION_SECONDS must be defined")
+}
+
 if(!process.env.NATS_URL) {
     throw new Error("NATS_URL must be defined")
 }

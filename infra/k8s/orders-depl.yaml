@@ -23,6 +23,8 @@ spec:
                   key: JWT_SECRET
             - name: NATS_URL 
               value: http://nats-srv:4222
+            - name: EXPIRATION_SECONDS # Order expiration time
+              value: "900"
             - name: NATS_CLUSTER_ID
               value: ticketing 
             - name: NATS_CLIENT_ID
