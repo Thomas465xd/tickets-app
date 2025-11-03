@@ -8,6 +8,7 @@ export interface TicketInterface extends Document {
     title: string;
     description: string; 
     date: string;
+    // status: TicketStatus
     price: number;
     userId: Types.ObjectId; 
 
@@ -48,6 +49,13 @@ const ticketSchema : Schema = new Schema(
             required: true, 
             trim: true
         },
+        // status: {
+        //     type: String,
+        //     enum: OrderStatus, 
+        //     default: OrderStatus.Created,
+        //     required: true, 
+        //     trim: true
+        // }, 
         price: {
             type: Number, 
             required: true, 
